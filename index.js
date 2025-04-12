@@ -1,27 +1,16 @@
-const express=require("express")
-const app=express()
-const db=require('./model/db')
+const express = require("express")
+const app = express()
+const Router = require("./routes/userRoutes")
 
 // configuring the environment variables
 require('dotenv').config()
 
-app.get('/',getUser,(req,res)=>{
+//middlewares for parsing the json
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
 
-res.send("hello there annay")
-})
-
-async function getUser(req,res,next){
-    try {
-        // Run a simple query to check if the connection is alive
-        const [data,aa] = await db.execute('SELECT * from users');
-        console.log(data)
-        console.log('Connection to the database is successful.');
-        return next()
-      } catch (err) {
-        console.error('Failed to connect to the database:', err);
-      }
-}
+app.use(Router)
 
 
-const port=process.env.PORT
-app.listen(port,()=> console.log("server started..."))
+const port = process.env.PORT
+app.listen(port, () => console.log("server started..."))
